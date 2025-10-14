@@ -75,8 +75,8 @@ router.get("/", async (_req, res) => {
 /**
  * Get a single employee by ID
  */
-router.get("/:id", async (req, res) => {
-  const { id } = req.params;
+router.get("/employee", async (req, res) => {
+  const { id } = req.body;
   const query = await supabase.from("employees").select("*").eq("id", id); // Translates to `SELECT * FROM employees WHERE id = {id};`
 
   if (query.error) {
@@ -87,7 +87,10 @@ router.get("/:id", async (req, res) => {
     return res.status(404).json({ message: "Employee not found" });
   }
 
-  res.json(query.data[0]);
+  res.json({
+    message: "Employee retrieved successfully",
+    employee: query.data[0],
+  });
 });
 
 /**
