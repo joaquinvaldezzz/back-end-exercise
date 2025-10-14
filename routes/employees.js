@@ -1,8 +1,8 @@
 const express = require("express");
 const { body, validationResult } = require("express-validator");
 
-const supabase = require("../db").default || require("../db");
-const employees = require("../seed").default || require("../seed");
+const supabase = require("../db");
+const employees = require("../seed").default;
 
 const router = express.Router();
 
