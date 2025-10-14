@@ -3,6 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
+    "build:css": "tailwindcss -i public/stylesheets/tailwind.css -o ./public/stylesheets/styles.css --minify",
+    "dev:css": "tailwindcss -i public/stylesheets/tailwind.css -o ./public/stylesheets/styles.css --watch",
     "format": "biome format --write --verbose",
     "lint": "biome lint --write --unsafe --verbose",
     "start": "nodemon bin/www"
@@ -18,8 +20,16 @@
   "devDependencies": {
     "@biomejs/biome": "2.2.6",
     "@faker-js/faker": "^10.0.0",
+    "@tailwindcss/cli": "^4.1.14",
     "@tsconfig/node-lts": "^22.0.2",
     "dotenv": "^17.2.3",
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "tailwindcss": "^4.1.14"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@parcel/watcher",
+      "@tailwindcss/oxide"
+    ]
   }
 }
