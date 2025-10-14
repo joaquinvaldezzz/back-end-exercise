@@ -8,9 +8,8 @@ const router = express.Router();
  * Get all employees
  */
 router.get("/", async (_req, res) => {
-  const data = await supabase.from("employees").select("*");
-
-  res.json(data);
+  const request = await supabase.from("employees").select("*"); // Translates to `SELECT * FROM employees;`
+  res.json(request);
 });
 
 /**
@@ -22,7 +21,7 @@ router.get("/:id", async (req, res) => {
     .from("employees")
     .select("*")
     .eq("id", id)
-    .single();
+    .single(); // Translates to `SELECT * FROM employees WHERE id = {id};`
 
   if (request.data === null) {
     return res.status(404).json({ error: "Employee not found" });
@@ -35,7 +34,7 @@ router.get("/:id", async (req, res) => {
  * Seed the database with 10 random employees
  */
 router.get("/seed", async (_req, res) => {
-  const data = await supabase.from("employees").insert(employees);
+  const data = await supabase.from("employees").insert(employees); // Translates to `INSERT INTO employees ... VALUES ...;`
   res.json(data);
 });
 
