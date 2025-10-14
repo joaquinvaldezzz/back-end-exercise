@@ -1,14 +1,14 @@
 # Back-end Exercise
 
-This is a simple back-end application built with Node.js and Express. It connects to a PostgreSQL database through Supabase and provides RESTful API endpoints to manage employee data.
+This is a simple back-end app built with Node.js and Express. It connects to a PostgreSQL database through Supabase and offers RESTful API endpoints for managing employee data.
 
 > [!NOTE]
 > For this exercise, the database connection details are stored in environment variables and included here for simplicity.
 
 ## Prerequisites
 
-- Node.js and npm (pnpm preferred) installed on your machine
-- Postman or any API testing tool to test the endpoints
+- Node.js and npm (or pnpm, preferred) installed on your machine
+- Postman or another API testing tool to test the endpoints
 - Git installed on your machine
 - A GitHub account to fork the repository
 
