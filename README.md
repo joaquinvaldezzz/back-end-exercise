@@ -39,3 +39,7 @@ This is a simple back-end application built with Node.js and Express. It connect
    ```
 
 5. The server will run at `http://localhost:3000`.
+6. Go to `http://localhost:3000/employees` to see the list of employees.
+
+> [!TIP]
+> Visit the [API documentation](https://documenter.getpostman.com/view/28321131/2sB3QMMUrC) for more details about this project.
