@@ -33,7 +33,7 @@ router.get("/", async (_req, res) => {
     return res.status(500).json({ error: query.error.message || "Database error" });
   }
 
-  res.json(query.data[0]);
+  res.json(query.data);
 });
 
 /**
@@ -95,5 +95,28 @@ router.patch(
     }
   },
 );
+
+/**
+ * Delete an employee by ID
+ */
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const query = await supabase.from("employees").delete().eq("id", id).select(); // Translates to `DELETE FROM employees WHERE id = {id} RETURNING *;`
+
+    if (query.error) {
+      return res.status(500).json({ error: query.error.message || "Database error" });
+    }
+
+    if (query.data == null || query.data.length === 0) {
+      return res.status(404).json({ message: "Employee not found" });
+    }
+
+    res.json({ message: "Employee deleted successfully", employee: query.data[0] });
+  } catch (error) {
+    return res.status(500).json({ error: error.message || "Database error" });
+  }
+});
 
 module.exports = router;
