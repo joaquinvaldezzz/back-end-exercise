@@ -17,7 +17,7 @@ This is a simple back-end app built with Node.js and Express. It connects to a P
 1. Clone the repository:
 
    ```bash
-   git clone
+   git clone https://github.com/joaquinvaldezzz/back-end-exercise.git
    ```
 
 2. Go to the project directory:
