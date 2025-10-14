@@ -7,7 +7,7 @@ const employees = require("../seed").default;
 const router = express.Router();
 
 /**
- * Seed the database with 10 random employees
+ * Seed the database with 100 random employees
  */
 router.get("/seed", async (_req, res) => {
   try {
