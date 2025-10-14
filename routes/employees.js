@@ -111,7 +111,6 @@ router.get("/:id", async (req, res) => {
 router.patch(
   "/:id",
   [
-    body("id").isInt({ min: 1 }),
     body("first_name").optional().isString(),
     body("middle_name").optional().isString(),
     body("last_name").optional().isString(),
