@@ -10,8 +10,8 @@ const router = express.Router();
  * Get all employees
  */
 router.get("/", async (_req, res) => {
-  const request = await supabase.from("employees").select("*"); // Translates to `SELECT * FROM employees;`
-  res.json(request);
+  const query = await supabase.from("employees").select("*"); // Translates to `SELECT * FROM employees;`
+  res.json(query);
 });
 
 /**
@@ -19,13 +19,13 @@ router.get("/", async (_req, res) => {
  */
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
-  const request = await supabase.from("employees").select("*").eq("id", id).single(); // Translates to `SELECT * FROM employees WHERE id = {id};`
+  const query = await supabase.from("employees").select("*").eq("id", id).single(); // Translates to `SELECT * FROM employees WHERE id = {id};`
 
-  if (request.data === null) {
+  if (query.data === null) {
     return res.status(404).json({ error: "Employee not found" });
   }
 
-  res.json(request.data);
+  res.json(query.data);
 });
 
 /**
@@ -48,17 +48,17 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const request = await supabase
+    const query = await supabase
       .from("employees")
       .update({ ...req.body, updated_at: new Date().toISOString() })
       .eq("id", id)
       .select(); // Translates to `UPDATE employees SET ... WHERE id = {id} RETURNING *;`
 
-    if (request.error) {
+    if (query.error) {
       return res.status(404).json({ error: "Employee not found" });
     }
 
-    res.json(request.data);
+    res.json(query.data);
   },
 );
 
@@ -66,8 +66,8 @@ router.post(
  * Seed the database with 10 random employees
  */
 router.get("/seed", async (_req, res) => {
-  const data = await supabase.from("employees").insert(employees); // Translates to `INSERT INTO employees ... VALUES ...;`
-  res.json(data);
+  const query = await supabase.from("employees").insert(employees); // Translates to `INSERT INTO employees ... VALUES ...;`
+  res.json(query);
 });
 
 module.exports = router;
