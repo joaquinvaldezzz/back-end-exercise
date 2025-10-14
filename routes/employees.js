@@ -1,17 +1,39 @@
 const express = require("express");
 const { body, validationResult } = require("express-validator");
 
-const supabase = require("../db");
-const employees = require("../seed").default;
+const supabase = require("../db").default || require("../db");
+const employees = require("../seed").default || require("../seed");
 
 const router = express.Router();
+
+/**
+ * Seed the database with 10 random employees
+ */
+router.get("/seed", async (_req, res) => {
+  try {
+    const query = await supabase.from("employees").insert(employees); // Translates to `INSERT INTO employees ... VALUES ...;`
+
+    if (query.error) {
+      return res.status(500).json({ error: query.error.message || "Database error" });
+    }
+
+    res.json({ message: "Database seeded successfully" });
+  } catch (error) {
+    return res.status(500).json({ error: error.message || "Database error" });
+  }
+});
 
 /**
  * Get all employees
  */
 router.get("/", async (_req, res) => {
   const query = await supabase.from("employees").select("*"); // Translates to `SELECT * FROM employees;`
-  res.json(query);
+
+  if (query.error) {
+    return res.status(500).json({ error: query.error.message || "Database error" });
+  }
+
+  res.json(query.data[0]);
 });
 
 /**
@@ -19,19 +41,23 @@ router.get("/", async (_req, res) => {
  */
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
-  const query = await supabase.from("employees").select("*").eq("id", id).single(); // Translates to `SELECT * FROM employees WHERE id = {id};`
+  const query = await supabase.from("employees").select("*").eq("id", id); // Translates to `SELECT * FROM employees WHERE id = {id};`
 
-  if (query.data === null) {
-    return res.status(404).json({ error: "Employee not found" });
+  if (query.error) {
+    return res.status(500).json({ error: query.error.message || "Database error" });
   }
 
-  res.json(query.data);
+  if (query.data == null || query.data.length === 0) {
+    return res.status(404).json({ message: "Employee not found" });
+  }
+
+  res.json(query.data[0]);
 });
 
 /**
  * Update an employee by ID
  */
-router.post(
+router.patch(
   "/:id",
   [
     body("first_name").optional().isString(),
@@ -48,26 +74,26 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const query = await supabase
-      .from("employees")
-      .update({ ...req.body, updated_at: new Date().toISOString() })
-      .eq("id", id)
-      .select(); // Translates to `UPDATE employees SET ... WHERE id = {id} RETURNING *;`
+    try {
+      const query = await supabase
+        .from("employees")
+        .update({ ...req.body, updated_at: new Date().toISOString() })
+        .eq("id", id)
+        .select(); // Translates to `UPDATE employees SET ... WHERE id = {id} RETURNING *;`
 
-    if (query.error) {
-      return res.status(404).json({ error: "Employee not found" });
+      if (query.error) {
+        return res.status(500).json({ error: query.error.message || "Database error" });
+      }
+
+      if (query.data == null || query.data.length === 0) {
+        return res.status(404).json({ message: "Employee not found" });
+      }
+
+      res.json(query.data);
+    } catch (error) {
+      return res.status(500).json({ error: error.message || "Database error" });
     }
-
-    res.json(query.data);
   },
 );
-
-/**
- * Seed the database with 10 random employees
- */
-router.get("/seed", async (_req, res) => {
-  const query = await supabase.from("employees").insert(employees); // Translates to `INSERT INTO employees ... VALUES ...;`
-  res.json(query);
-});
 
 module.exports = router;
