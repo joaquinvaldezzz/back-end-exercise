@@ -1,0 +1,24 @@
+{
+  "name": "back-end-exercise",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "format": "biome format --write --verbose",
+    "lint": "biome lint --write --unsafe --verbose",
+    "start": "nodemon bin/www"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.75.0",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "morgan": "~1.9.1"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.2.6",
+    "@faker-js/faker": "^10.0.0",
+    "@tsconfig/node-lts": "^22.0.2",
+    "dotenv": "^17.2.3",
+    "nodemon": "^3.1.10"
+  }
+}
