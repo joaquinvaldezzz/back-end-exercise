@@ -1,8 +1,8 @@
-const express = require('express');
-const { body, validationResult } = require('express-validator');
+import express from 'express';
+import { body, validationResult } from 'express-validator';
 
-const supabase = require('../lib/db');
-const employees = require('../lib/seed').default;
+import supabase from '../lib/db.js';
+import employees from '../lib/seed.js';
 
 const router = express.Router();
 
@@ -173,4 +173,4 @@ router.delete('/:id', body('id').isInt({ min: 1 }), async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
