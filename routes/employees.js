@@ -17,7 +17,7 @@ router.get('/seed', async (_req, res) => {
       return res.status(500).json({ error: query.error.message || 'Database error' });
     }
 
-    res.json({ message: 'Database seeded successfully' });
+    return res.json({ message: 'Database seeded successfully' });
   } catch (error) {
     return res.status(500).json({ error: error.message || 'Database error' });
   }
@@ -49,7 +49,7 @@ router.post(
         return res.status(500).json({ error: query.error.message || 'Database error' });
       }
 
-      res.status(201).json({
+      return res.status(201).json({
         message: 'Employee created successfully',
         employee: query.data[0],
       });
@@ -70,7 +70,7 @@ router.get('/', async (_req, res) => {
       return res.status(500).json({ error: query.error.message || 'Database error' });
     }
 
-    res.json({
+    return res.json({
       message: 'Employees retrieved successfully',
       employees: query.data,
     });
@@ -96,7 +96,7 @@ router.get('/:id', async (req, res) => {
       return res.status(404).json({ message: 'Employee not found' });
     }
 
-    res.json({
+    return res.json({
       message: 'Employee retrieved successfully',
       employee: query.data[0],
     });
@@ -140,7 +140,7 @@ router.patch(
         return res.status(404).json({ message: 'Employee not found' });
       }
 
-      res.json({
+      return res.json({
         message: 'Employee updated successfully',
         employee: query.data[0],
       });
@@ -167,7 +167,7 @@ router.delete('/:id', body('id').isInt({ min: 1 }), async (req, res) => {
       return res.status(404).json({ message: 'Employee not found' });
     }
 
-    res.json({ message: 'Employee deleted successfully', employee: query.data[0] });
+    return res.json({ message: 'Employee deleted successfully', employee: query.data[0] });
   } catch (error) {
     return res.status(500).json({ error: error.message || 'Database error' });
   }
