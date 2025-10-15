@@ -1,10 +1,10 @@
-const { faker } = require("@faker-js/faker");
+const { faker } = require('@faker-js/faker');
 
 const employees = Array.from({ length: 100 }, () => ({
   first_name: faker.person.firstName(),
   middle_name: faker.person.middleName(),
   last_name: faker.person.lastName(),
-  employee_type: faker.helpers.arrayElement(["FULL_TIME", "PART_TIME", "CONTRACTOR"]),
+  employee_type: faker.helpers.arrayElement(['FULL_TIME', 'PART_TIME', 'CONTRACTOR']),
   salary: faker.number.int({ min: 30000, max: 120000 }),
 }));
 
