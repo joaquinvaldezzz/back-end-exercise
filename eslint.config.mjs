@@ -2,6 +2,7 @@ import path from 'node:path';
 import { FlatCompat } from '@eslint/eslintrc';
 import jsEslint from '@eslint/js';
 import eslintConfigPrettier from 'eslint-config-prettier';
+import jsdoc from 'eslint-plugin-jsdoc';
 import eslintPluginPrettier from 'eslint-plugin-prettier/recommended';
 import { defineConfig } from 'eslint/config';
 import globals from 'globals';
@@ -20,7 +21,11 @@ export default defineConfig([
   },
   {
     files: ['**/*.js'],
-    extends: [...compat.extends('airbnb-base')],
+    extends: [
+      ...compat.extends('airbnb-base'),
+      jsdoc.configs['flat/recommended'],
+      jsdoc.configs['flat/stylistic-typescript'],
+    ],
     languageOptions: { sourceType: 'module' },
     rules: {
       'import/extensions': [
@@ -30,6 +35,8 @@ export default defineConfig([
           js: 'always',
         },
       ],
+      'jsdoc/check-line-alignment': 'off',
+      'jsdoc/tag-lines': 'off',
     },
   },
 ]);
