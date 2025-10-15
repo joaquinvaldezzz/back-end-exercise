@@ -22,5 +22,14 @@ export default defineConfig([
     files: ['**/*.js'],
     extends: [...compat.extends('airbnb-base')],
     languageOptions: { sourceType: 'module' },
+    rules: {
+      'import/extensions': [
+        'error',
+        'always',
+        {
+          js: 'always',
+        },
+      ],
+    },
   },
 ]);
