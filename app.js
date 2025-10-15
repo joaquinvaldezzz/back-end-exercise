@@ -1,18 +1,17 @@
-const express = require('express');
-const path = require('node:path');
-const cookieParser = require('cookie-parser');
-const logger = require('morgan');
+import express from 'express';
+import cookieParser from 'cookie-parser';
+import morgan from 'morgan';
 
-const employeesRouter = require('./routes/employees');
+import employeesRouter from './routes/employees.js';
 
 const app = express();
 
-app.use(logger('dev'));
+app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static('public'));
 
 app.use('/employees', employeesRouter);
 
-module.exports = app;
+export default app;
