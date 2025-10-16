@@ -2,7 +2,6 @@
   "name": "back-end-exercise",
   "version": "0.0.1",
   "private": true,
-  "type": "module",
   "scripts": {
     "build:css": "tailwindcss -i public/stylesheets/tailwind.css -o ./public/stylesheets/styles.css --minify",
     "dev:css": "tailwindcss -i public/stylesheets/tailwind.css -o ./public/stylesheets/styles.css --watch",

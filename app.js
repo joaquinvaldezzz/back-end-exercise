@@ -1,8 +1,9 @@
-import express from 'express';
-import cookieParser from 'cookie-parser';
-import morgan from 'morgan';
+const path = require('path');
+const express = require('express');
+const cookieParser = require('cookie-parser');
+const morgan = require('morgan');
 
-import employeesRouter from './routes/employees.js';
+const employeesRouter = require('./routes/employees');
 
 const app = express();
 
@@ -10,8 +11,8 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static('./public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/employees', employeesRouter);
 
-export default app;
+module.exports = app;

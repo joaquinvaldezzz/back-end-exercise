@@ -1,19 +1,19 @@
 #!/usr/bin/env node
 
-/**
- * Module dependencies.
- */
-import http from 'http';
-import debugLib from 'debug';
+/** Module dependencies. */
+const http = require('http');
+const debugLib = require('debug');
 
-import app from '../app.js';
+const app = require('../app');
 
 const debug = debugLib('back-end-exercise:server');
 
 /**
  * Normalize a port into a number, string, or false.
+ *
+ * @param {string} val Port value
+ * @returns {number | string | boolean} Normalized port value
  */
-
 function normalizePort(val) {
   const port = parseInt(val, 10);
 
@@ -30,23 +30,20 @@ function normalizePort(val) {
   return false;
 }
 
-/**
- * Get port from environment and store in Express.
- */
-
+/** Get port from environment and store in Express. */
 const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
-/**
- * Create HTTP server.
- */
+/** Create HTTP server. */
 
 const server = http.createServer(app);
 
 /**
  * Event listener for HTTP server "error" event.
+ *
+ * @param {NodeJS.ErrnoException} error Error object
+ * @returns {void}
  */
-
 function onError(error) {
   if (error.syscall !== 'listen') {
     throw error;
@@ -69,20 +66,15 @@ function onError(error) {
   }
 }
 
-/**
- * Event listener for HTTP server "listening" event.
- */
-
+/** Event listener for HTTP server "listening" event. */
 function onListening() {
-  const addr = server.address();
-  const bind = typeof addr === 'string' ? `pipe ${addr}` : `port ${addr.port}`;
+  const address = server.address();
+  const bind =
+    typeof address === 'string' ? `pipe ${address}` : address != null && `port ${address.port}`;
   debug(`Listening on ${bind}`);
 }
 
-/**
- * Listen on provided port, on all network interfaces.
- */
-
+/** Listen on provided port, on all network interfaces. */
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);

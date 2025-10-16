@@ -1,31 +1,46 @@
-import express from 'express';
-import { body, validationResult } from 'express-validator';
+const express = require('express');
+const { body, validationResult } = require('express-validator');
 
-import supabase from '../lib/db.js';
-import employees from '../lib/seed.js';
+const supabase = require('../lib/db');
+const employees = require('../lib/seed');
 
 const router = express.Router();
 
 /**
- * Seed the database with 100 random employees
+ * @param {number} min Minimum integer value
+ * @param {number} max Maximum integer value
+ * @returns {number} A random integer between min and max (inclusive)
  */
-router.get('/seed', async (_req, res) => {
-  try {
-    const query = await supabase.from('employees').insert(employees); // Translates to `INSERT INTO employees ... VALUES ...;`
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (Math.floor(max) - Math.ceil(min) + 1)) + min;
+}
 
-    if (query.error) {
-      return res.status(500).json({ error: query.error.message || 'Database error' });
+getRandomInt(1, 10);
+
+/** Seed the database with 100 random employees */
+router.get(
+  '/seed',
+
+  /**
+   * @param {express.Request} _request This parameter is not used
+   * @param {express.Response} response This parameter is used to send the response
+   * @returns {Promise<express.Response>} The response object
+   */
+  async (_request, response) => {
+    try {
+      const query = await supabase.from('employees').insert(employees); // Translates to `INSERT INTO employees ... VALUES ...;`
+
+      if (query.error) {
+        return response.status(500).json({ error: query.error.message || 'Database error' });
+      }
+
+      return response.json({ message: 'Database seeded successfully' });
+    } catch (error) {
+      return response.status(500).json({ error: error.message || 'Database error' });
     }
+  },
+);
 
-    return res.json({ message: 'Database seeded successfully' });
-  } catch (error) {
-    return res.status(500).json({ error: error.message || 'Database error' });
-  }
-});
-
-/**
- * Create a new employee
- */
 router.post(
   '/',
   [
@@ -35,33 +50,37 @@ router.post(
     body('employee_type').isIn(['FULL_TIME', 'PART_TIME', 'CONTRACTOR']),
     body('salary').isInt({ min: 0 }),
   ],
-  async (req, res) => {
-    const errors = validationResult(req);
+
+  /**
+   * @param {express.Request} request This parameter is used to get the request data
+   * @param {express.Response} response This parameter is used to send the response
+   * @returns {Promise<express.Response>} The response object
+   */
+  async (request, response) => {
+    const errors = validationResult(request);
 
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return response.status(400).json({ errors: errors.array() });
     }
 
     try {
-      const query = await supabase.from('employees').insert(req.body).select(); // Translates to `INSERT INTO employees ... VALUES ... RETURNING *;`
+      const query = await supabase.from('employees').insert(request.body).select(); // Translates to `INSERT INTO employees ... VALUES ... RETURNING *;`
 
       if (query.error) {
-        return res.status(500).json({ error: query.error.message || 'Database error' });
+        return response.status(500).json({ error: query.error.message || 'Database error' });
       }
 
-      return res.status(201).json({
+      return response.status(201).json({
         message: 'Employee created successfully',
         employee: query.data[0],
       });
     } catch (error) {
-      return res.status(500).json({ error: error.message || 'Database error' });
+      return response.status(500).json({ error: error.message || 'Database error' });
     }
   },
 );
 
-/**
- * Get all employees
- */
+/** Get all employees */
 router.get('/', async (_req, res) => {
   try {
     const query = await supabase.from('employees').select('*'); // Translates to `SELECT * FROM employees;`
@@ -79,9 +98,7 @@ router.get('/', async (_req, res) => {
   }
 });
 
-/**
- * Get a single employee by ID
- */
+/** Get a single employee by ID */
 router.get('/:id', async (req, res) => {
   const id = parseInt(req.params.id, 10);
 
@@ -105,9 +122,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-/**
- * Update an employee by ID
- */
+/** Update an employee by ID */
 router.patch(
   '/:id',
   [
@@ -117,60 +132,74 @@ router.patch(
     body('employee_type').optional().isIn(['FULL_TIME', 'PART_TIME', 'CONTRACTOR']),
     body('salary').optional().isInt({ min: 0 }),
   ],
-  async (req, res) => {
-    const id = parseInt(req.params.id, 10);
-    const errors = validationResult(req);
+
+  /**
+   * @param {express.Request} request
+   * @param {express.Response} response
+   * @returns {Promise<express.Response>}
+   */
+  async (request, response) => {
+    const id = parseInt(request.params.id, 10);
+    const errors = validationResult(request);
 
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return response.status(400).json({ errors: errors.array() });
     }
 
     try {
       const query = await supabase
         .from('employees')
-        .update({ ...req.body, updated_at: new Date().toISOString() })
+        .update({ ...request.body, updated_at: new Date().toISOString() })
         .eq('id', id)
         .select(); // Translates to `UPDATE employees SET ... WHERE id = {id} RETURNING *;`
 
       if (query.error) {
-        return res.status(500).json({ error: query.error.message || 'Database error' });
+        return response.status(500).json({ error: query.error.message || 'Database error' });
       }
 
       if (query.data == null || query.data.length === 0) {
-        return res.status(404).json({ message: 'Employee not found' });
+        return response.status(404).json({ message: 'Employee not found' });
       }
 
-      return res.json({
+      return response.json({
         message: 'Employee updated successfully',
         employee: query.data[0],
       });
     } catch (error) {
-      return res.status(500).json({ error: error.message || 'Database error' });
+      return response.status(500).json({ error: error.message || 'Database error' });
     }
   },
 );
 
-/**
- * Delete an employee by ID
- */
-router.delete('/:id', body('id').isInt({ min: 1 }), async (req, res) => {
-  const id = parseInt(req.params.id, 10);
+/** Delete an employee by ID */
+router.delete(
+  '/:id',
+  body('id').isInt({ min: 1 }),
 
-  try {
-    const query = await supabase.from('employees').delete().eq('id', id).select(); // Translates to `DELETE FROM employees WHERE id = {id} RETURNING *;`
+  /**
+   * @param {express.Request} request
+   * @param {express.Response} response
+   * @returns {Promise<express.Response>}
+   */
+  async (request, response) => {
+    const id = parseInt(request.params.id, 10);
 
-    if (query.error) {
-      return res.status(500).json({ error: query.error.message || 'Database error' });
+    try {
+      const query = await supabase.from('employees').delete().eq('id', id).select(); // Translates to `DELETE FROM employees WHERE id = {id} RETURNING *;`
+
+      if (query.error) {
+        return response.status(500).json({ error: query.error.message || 'Database error' });
+      }
+
+      if (query.data == null || query.data.length === 0) {
+        return response.status(404).json({ message: 'Employee not found' });
+      }
+
+      return response.json({ message: 'Employee deleted successfully', employee: query.data[0] });
+    } catch (error) {
+      return response.status(500).json({ error: error.message || 'Database error' });
     }
+  },
+);
 
-    if (query.data == null || query.data.length === 0) {
-      return res.status(404).json({ message: 'Employee not found' });
-    }
-
-    return res.json({ message: 'Employee deleted successfully', employee: query.data[0] });
-  } catch (error) {
-    return res.status(500).json({ error: error.message || 'Database error' });
-  }
-});
-
-export default router;
+module.exports = router;
