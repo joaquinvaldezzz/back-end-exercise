@@ -15,9 +15,9 @@ export default defineConfig([
   { ignores: ['node_modules/**'] },
   {
     files: ['**/*.{js,mjs,cjs}'],
-    extends: ['js/recommended', eslintConfigPrettier],
+    extends: ['js/recommended', eslintConfigPrettier, eslintPluginPrettier],
     languageOptions: { globals: globals.node },
-    plugins: { js: jsEslint, eslintPluginPrettier },
+    plugins: { js: jsEslint },
   },
   {
     files: ['**/*.js'],
@@ -28,13 +28,6 @@ export default defineConfig([
     ],
     languageOptions: { sourceType: 'module' },
     rules: {
-      'import/extensions': [
-        'error',
-        'always',
-        {
-          js: 'always',
-        },
-      ],
       'jsdoc/check-line-alignment': 'off',
       'jsdoc/tag-lines': 'off',
     },
