@@ -27,30 +27,36 @@ router.post(
   ],
 
   /**
-   * @param {express.Request} request This parameter is used to get the request data
-   * @param {express.Response} response This parameter is used to send the response
-   * @returns {Promise<express.Response>} The response object
+   * Handles an incoming Express request and sends a response.
+   *
+   * @async
+   * @function
+   * @param {express.Request} req The Express request object containing client request data.
+   * @param {express.Response} res The Express response object used to send back the HTTP response.
+   * @returns {Promise<express.Response>} A promise that resolves with the Express response object.
+   * @throws {Error} If the request fails or the data is invalid.
    */
-  async (request, response) => {
-    const errors = validationResult(request);
+  async (req, res) => {
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-      return response.status(400).json({ errors: errors.array() });
+      return res.status(400).json({ errors: errors.array() });
     }
 
     try {
-      const query = await supabase.from('employees').insert(request.body).select(); // Translates to `INSERT INTO employees ... VALUES ... RETURNING *;`
+      const query = await supabase.from('employees').insert(req.body).select(); // Translates to `INSERT INTO employees ... VALUES ... RETURNING *;`
 
       if (query.error) {
-        return response.status(500).json({ error: query.error.message || 'Database error' });
+        return res.status(500).json({ error: query.error.message || 'Database error' });
       }
 
-      return response.status(201).json({
+      return res.status(201).json({
         message: 'Employee created successfully',
         employee: query.data[0],
       });
     } catch (error) {
-      return response.status(500).json({ error: error.message || 'Database error' });
+      const message = error instanceof Error ? error.message : String(error);
+      return res.status(500).json({ error: message || 'Database error' });
     }
   },
 );
@@ -69,7 +75,8 @@ router.get('/', async (_req, res) => {
       employees: query.data,
     });
   } catch (error) {
-    return res.status(500).json({ error: error.message || 'Database error' });
+    const message = error instanceof Error ? error.message : String(error);
+    return res.status(500).json({ error: message || 'Database error' });
   }
 });
 
@@ -93,7 +100,8 @@ router.get('/:id', async (req, res) => {
       employee: query.data[0],
     });
   } catch (error) {
-    return res.status(500).json({ error: error.message || 'Database error' });
+    const message = error instanceof Error ? error.message : String(error);
+    return res.status(500).json({ error: message || 'Database error' });
   }
 });
 
@@ -109,39 +117,45 @@ router.patch(
   ],
 
   /**
-   * @param {express.Request} request
-   * @param {express.Response} response
-   * @returns {Promise<express.Response>}
+   * Handles an incoming Express request and sends a response.
+   *
+   * @async
+   * @function
+   * @param {express.Request} req The Express request object containing client request data.
+   * @param {express.Response} res The Express response object used to send back the HTTP response.
+   * @returns {Promise<express.Response>} A promise that resolves with the Express response object.
+   * @throws {Error} If the request fails or the data is invalid.
    */
-  async (request, response) => {
-    const id = parseInt(request.params.id, 10);
-    const errors = validationResult(request);
+  async (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-      return response.status(400).json({ errors: errors.array() });
+      return res.status(400).json({ errors: errors.array() });
     }
 
     try {
       const query = await supabase
         .from('employees')
-        .update({ ...request.body, updated_at: new Date().toISOString() })
+        .update({ ...req.body, updated_at: new Date().toISOString() })
         .eq('id', id)
         .select(); // Translates to `UPDATE employees SET ... WHERE id = {id} RETURNING *;`
 
       if (query.error) {
-        return response.status(500).json({ error: query.error.message || 'Database error' });
+        return res.status(500).json({ error: query.error.message || 'Database error' });
       }
 
       if (query.data == null || query.data.length === 0) {
-        return response.status(404).json({ message: 'Employee not found' });
+        return res.status(404).json({ message: 'Employee not found' });
       }
 
-      return response.json({
+      return res.json({
         message: 'Employee updated successfully',
         employee: query.data[0],
       });
     } catch (error) {
-      return response.status(500).json({ error: error.message || 'Database error' });
+      const message = error instanceof Error ? error.message : String(error);
+      return res.status(500).json({ error: message || 'Database error' });
     }
   },
 );
@@ -152,27 +166,33 @@ router.delete(
   body('id').isInt({ min: 1 }),
 
   /**
-   * @param {express.Request} request
-   * @param {express.Response} response
-   * @returns {Promise<express.Response>}
+   * Handles an incoming Express request and sends a response.
+   *
+   * @async
+   * @function
+   * @param {express.Request} req The Express request object containing client request data.
+   * @param {express.Response} res The Express response object used to send back the HTTP response.
+   * @returns {Promise<express.Response>} A promise that resolves with the Express response object.
+   * @throws {Error} If the request fails or the data is invalid.
    */
-  async (request, response) => {
-    const id = parseInt(request.params.id, 10);
+  async (req, res) => {
+    const id = parseInt(req.params.id, 10);
 
     try {
       const query = await supabase.from('employees').delete().eq('id', id).select(); // Translates to `DELETE FROM employees WHERE id = {id} RETURNING *;`
 
       if (query.error) {
-        return response.status(500).json({ error: query.error.message || 'Database error' });
+        return res.status(500).json({ error: query.error.message || 'Database error' });
       }
 
       if (query.data == null || query.data.length === 0) {
-        return response.status(404).json({ message: 'Employee not found' });
+        return res.status(404).json({ message: 'Employee not found' });
       }
 
-      return response.json({ message: 'Employee deleted successfully', employee: query.data[0] });
+      return res.json({ message: 'Employee deleted successfully', employee: query.data[0] });
     } catch (error) {
-      return response.status(500).json({ error: error.message || 'Database error' });
+      const message = error instanceof Error ? error.message : String(error);
+      return res.status(500).json({ error: message || 'Database error' });
     }
   },
 );
