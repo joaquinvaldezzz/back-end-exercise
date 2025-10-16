@@ -17,30 +17,6 @@ function getRandomInt(min, max) {
 
 getRandomInt(1, 10);
 
-/** Seed the database with 100 random employees */
-router.get(
-  '/seed',
-
-  /**
-   * @param {express.Request} _request This parameter is not used
-   * @param {express.Response} response This parameter is used to send the response
-   * @returns {Promise<express.Response>} The response object
-   */
-  async (_request, response) => {
-    try {
-      const query = await supabase.from('employees').insert(employees); // Translates to `INSERT INTO employees ... VALUES ...;`
-
-      if (query.error) {
-        return response.status(500).json({ error: query.error.message || 'Database error' });
-      }
-
-      return response.json({ message: 'Database seeded successfully' });
-    } catch (error) {
-      return response.status(500).json({ error: error.message || 'Database error' });
-    }
-  },
-);
-
 router.post(
   '/',
   [

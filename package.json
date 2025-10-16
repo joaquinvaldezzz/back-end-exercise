@@ -10,7 +10,6 @@
     "start": "nodemon bin/www.js"
   },
   "dependencies": {
-    "@faker-js/faker": "^10.1.0",
     "@supabase/supabase-js": "^2.75.0",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
