@@ -15,7 +15,7 @@ export default defineConfig([
   { ignores: ['node_modules/**'] },
   {
     files: ['**/*.{js,mjs,cjs}'],
-    extends: ['js/recommended', eslintConfigPrettier, eslintPluginPrettier],
+    extends: ['js/recommended'],
     languageOptions: { globals: globals.node },
     plugins: { js: jsEslint },
   },
@@ -25,9 +25,22 @@ export default defineConfig([
       ...compat.extends('airbnb-base'),
       jsdoc.configs['flat/recommended'],
       jsdoc.configs['flat/stylistic-typescript'],
+      eslintConfigPrettier,
+      eslintPluginPrettier,
     ],
-    languageOptions: { sourceType: 'module' },
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+    },
     rules: {
+      'import/extensions': [
+        'error',
+        'always',
+        {
+          js: 'always',
+        },
+      ],
+      'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.test.js'] }],
       'jsdoc/check-line-alignment': 'off',
       'jsdoc/tag-lines': 'off',
     },
