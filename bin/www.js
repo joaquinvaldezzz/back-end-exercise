@@ -1,10 +1,14 @@
 #!/usr/bin/env node
 
 /** Module dependencies. */
-const http = require('http');
-const debugLib = require('debug');
+// const http = require('http');
+// const debugLib = require('debug');
 
-const app = require('../app');
+// const app = require('../app');
+import http from 'http';
+import debugLib from 'debug';
+
+import app from '../app.js';
 
 const debug = debugLib('back-end-exercise:server');
 

@@ -1,7 +1,12 @@
-const express = require('express');
-const { body, validationResult } = require('express-validator');
+// const express = require('express');
+// const { body, validationResult } = require('express-validator');
 
-const supabase = require('../lib/db');
+// const supabase = require('../lib/db');
+
+import express from 'express';
+import { body, validationResult } from 'express-validator';
+
+import supabase from '../lib/db.js';
 
 const router = express.Router();
 
@@ -197,4 +202,4 @@ router.delete(
   },
 );
 
-module.exports = router;
+export default router;
