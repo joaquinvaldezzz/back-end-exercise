@@ -1,10 +1,3 @@
-// const path = require('path');
-// const express = require('express');
-// const cookieParser = require('cookie-parser');
-// const morgan = require('morgan');
-
-// const employeesRouter = require('./routes/employees');
-
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import express from 'express';
