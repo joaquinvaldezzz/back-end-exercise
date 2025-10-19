@@ -4,6 +4,8 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 
+import '@dotenvx/dotenvx';
+
 import employeesRouter from './routes/employees.js';
 
 const filename = fileURLToPath(import.meta.url);
