@@ -12,7 +12,7 @@ const compat = new FlatCompat({
 });
 
 export default defineConfig([
-  { ignores: ['node_modules/**'] },
+  { ignores: ['dist/*', 'node_modules/**'] },
   {
     files: ['**/*.{js,mjs,cjs}'],
     extends: ['js/recommended'],
