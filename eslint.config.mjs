@@ -1,48 +1,91 @@
+/**
+ * # THIS FILE WAS AUTO-GENERATED.
+ *
+ * PLEASE DO NOT EDIT IT MANUALLY.
+ *
+ * IF YOU'RE COPYING THIS INTO AN ESLINT CONFIG, REMOVE THIS COMMENT BLOCK.
+ */
+
 import path from 'node:path';
-import { FlatCompat } from '@eslint/eslintrc';
-import jsEslint from '@eslint/js';
-import eslintConfigPrettier from 'eslint-config-prettier';
-import jsdoc from 'eslint-plugin-jsdoc';
-import eslintPluginPrettier from 'eslint-plugin-prettier/recommended';
-import { defineConfig } from 'eslint/config';
-import globals from 'globals';
 
-const compat = new FlatCompat({
-  baseDirectory: path.dirname(new URL(import.meta.url).pathname),
-});
+import { includeIgnoreFile } from '@eslint/compat';
+import js from '@eslint/js';
+import { configs, plugins, rules } from 'eslint-config-airbnb-extended';
+import { rules as prettierConfigRules } from 'eslint-config-prettier';
+import prettierPlugin from 'eslint-plugin-prettier';
 
-export default defineConfig([
-  { ignores: ['dist/*', 'node_modules/**'] },
+const gitignorePath = path.resolve('.', '.gitignore');
+
+/** @type {import('eslint').Linter.Config[]} */
+const jsConfig = [
+  // ESLint Recommended Rules
   {
-    files: ['**/*.{js,mjs,cjs}'],
-    extends: ['js/recommended'],
-    languageOptions: { globals: globals.node },
-    plugins: { js: jsEslint },
+    name: 'js/config',
+    ...js.configs.recommended,
   },
+  // Stylistic Plugin
+  plugins.stylistic,
+  // Import X Plugin
+  plugins.importX,
+  // Airbnb Base Recommended Config
+  ...configs.base.recommended,
+  // Strict Import Config
+  rules.base.importsStrict,
   {
-    files: ['**/*.js'],
-    extends: [
-      ...compat.extends('airbnb-base'),
-      jsdoc.configs['flat/recommended'],
-      jsdoc.configs['flat/stylistic-typescript'],
-      eslintConfigPrettier,
-      eslintPluginPrettier,
-    ],
-    languageOptions: {
-      ecmaVersion: 'latest',
-      sourceType: 'module',
-    },
     rules: {
-      'import/extensions': [
-        'error',
-        'always',
-        {
-          js: 'always',
-        },
-      ],
-      'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.test.js'] }],
-      'jsdoc/check-line-alignment': 'off',
-      'jsdoc/tag-lines': 'off',
+      // Disable Import X order rules to avoid conflicts with @ianvs/prettier-plugin-sort-imports
+      'import-x/order': 'off',
     },
   },
-]);
+];
+
+/** @type {import('eslint').Linter.Config[]} */
+const nodeConfig = [
+  // Node Plugin
+  plugins.node,
+  // Airbnb Node Recommended Config
+  ...configs.node.recommended,
+];
+
+/** @type {import('eslint').Linter.Config[]} */
+const typescriptConfig = [
+  // TypeScript ESLint Plugin
+  plugins.typescriptEslint,
+  // Airbnb Base TypeScript Config
+  ...configs.base.typescript,
+  // Strict TypeScript Config
+  rules.typescript.typescriptEslintStrict,
+];
+
+/** @type {import('eslint').Linter.Config[]} */
+const prettierConfig = [
+  // Prettier Plugin
+  {
+    name: 'prettier/plugin/config',
+    plugins: {
+      prettier: prettierPlugin,
+    },
+  },
+  // Prettier Config
+  {
+    name: 'prettier/config',
+    rules: {
+      ...prettierConfigRules,
+      'prettier/prettier': 'error',
+    },
+  },
+];
+
+/** @type {import('eslint').Linter.Config[]} */
+export default [
+  // Ignore .gitignore files/folder in eslint
+  includeIgnoreFile(gitignorePath),
+  // Javascript Config
+  ...jsConfig,
+  // Node Config
+  ...nodeConfig,
+  // TypeScript Config
+  ...typescriptConfig,
+  // Prettier Config
+  ...prettierConfig,
+];
