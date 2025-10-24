@@ -57,9 +57,6 @@ importers:
       '@total-typescript/tsconfig':
         specifier: ^1.0.4
         version: 1.0.4
-      '@tsconfig/node-lts':
-        specifier: ^22.0.2
-        version: 22.0.2
       '@types/cookie-parser':
         specifier: ^1.4.9
         version: 1.4.9(@types/express@5.0.3)
@@ -1027,9 +1024,6 @@ packages:
 
   '@total-typescript/tsconfig@1.0.4':
     resolution: {integrity: sha512-fO4ctMPGz1kOFOQ4RCPBRBfMy3gDn+pegUfrGyUFRMv/Rd0ZM3/SHH3hFCYG4u6bPLG8OlmOGcBLDexvyr3A5w==}
-
-  '@tsconfig/node-lts@22.0.2':
-    resolution: {integrity: sha512-Kgq5yXTvnUnvlhob0xJpOH4na9PWtuFhHSf94MpDwnENWgiFeJKDNANQV2MT1WpXZYkK2WSWfVYKhVkR7bc8TA==}
 
   '@tsconfig/node10@1.0.11':
     resolution: {integrity: sha512-DcRjDCujK/kCk/cUe8Xz8ZSpm8mS3mNNpta+jGCA6USEDfktlNvm1+IuZ9eTcDbNk41BHwpHHeW+N1lKCz4zOw==}
@@ -4444,8 +4438,6 @@ snapshots:
       '@tailwindcss/oxide-win32-x64-msvc': 4.1.14
 
   '@total-typescript/tsconfig@1.0.4': {}
-
-  '@tsconfig/node-lts@22.0.2': {}
 
   '@tsconfig/node10@1.0.11': {}
 

@@ -1,9 +1,11 @@
-import express, { Router } from 'express';
+import express from 'express';
 
-const router: Router = express.Router();
+import type { Router } from 'express';
 
-router.get('/', (_req, res) => {
+const employeesRoute: Router = express.Router();
+
+employeesRoute.get('/', (_req, res) => {
   res.json({ message: 'Employees route' });
 });
 
-export default router;
+export default employeesRoute;
