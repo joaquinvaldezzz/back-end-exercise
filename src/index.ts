@@ -9,8 +9,6 @@ import employeesRoute from '@/routes/employees.js';
 
 import type { Express } from 'express';
 
-import '@dotenvx/dotenvx';
-
 const filename = fileURLToPath(import.meta.url);
 const directory = dirname(filename);
 const publicDirectory = resolve(directory, '..', 'public');
