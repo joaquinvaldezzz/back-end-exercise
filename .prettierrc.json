@@ -6,6 +6,20 @@
     "prettier-plugin-jsdoc",
     "prettier-plugin-tailwindcss"
   ],
-  "importOrder": ["^(express/(.*)$)|^(express$)", "<THIRD_PARTY_MODULES>", "", "^[./]"],
+  "importOrder": [
+    "^(express/(.*)$)|^(express$)",
+    "<THIRD_PARTY_MODULES>",
+    "",
+    "^types$",
+    "^@/types/(.*)$",
+    "^@/routes/(.*)$",
+    "^@/controllers/(.*)$",
+    "^@/services/(.*)$",
+    "^@/models/(.*)$",
+    "^@/utils/(.*)$",
+    "^@/config/(.*)$",
+    "",
+    "^[./]"
+  ],
   "tailwindStylesheet": "./src/styles/main.css"
 }
